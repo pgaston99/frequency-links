@@ -1,20 +1,17 @@
 let socket = io();
-let playing = false;
 
-function preload() {
-    img = loadImage('holdinghands.png');
-}
+//target slider
+let slider = document.querySelector('#rotationSlider')
 
-function sendFreq(){
-    const data = [nameField.value(), freqInput.value()]
-    socket.emit("frequency", data);
-    console.log(data);
-}
+//listen for slider input and do something with the input
+slider.addEventListener("input", function (e) {
+  socket.emit("rotation", this.value);
+});
 
-socket.on('freqResponse', (data) => {
-    console.log(data);
-    freqState.html(data[0] + " changed the frequency to " + data[1]);
-    oscillator.freq(data[1], 0.250);
+socket.on('rotationResponse', (data) => {
+    //transform = "rotate(90deg)"
+    document.querySelector("#square").style.transform = `rotate(${data}deg)`
+    console.log(("someone changed the rotation to " + data));
 });
 
 //log new users as they come into the room
